@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress SpringFacetInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--当前项目在整个分布式架构里面的唯一名称，用来计算依赖关系的标签，owner表示当前这个应用是由谁维护的,这两一般都必须配置-->
+    <dubbo:application name="order-provider" owner="zhaodf" logger="log4j"/>
+
+    <!--<dubbo:monitor protocol="registry"/>-->
+
+    <!--注册中心，N/A表示不使用注册中心-->
+    <!--使用zookeeper作为注册中心，集群使用：zookeeper://172.24.1.29:21810?backup=172.24.1.30:21810,172.24.1.31:21810-->
+    <dubbo:registry address="zookeeper://192.168.0.103:2181" file="G:/output/dubbo.cache"/>
+
+    <!--服务发布的配置，需要暴露的服务接口-->
+    <dubbo:service interface="com.zhaodf.IOrderService" ref="orderService" protocol="hessian" version="1.0"/>
+    <!--服务发布的配置，需要暴露的服务接口-->
+    <dubbo:service interface="com.zhaodf.IOrderService" ref="orderService2" protocol="hessian" version="2.0" timeout="1000" cluster="failover" retries="2"/>
+    <!--服务发布的配置，需要暴露的服务接口-->
+    <dubbo:service interface="com.zhaodf.IOrderQueryService" ref="orderQueryService" protocol="http"/>
+
+    <!--当前服务发布所需要依赖的协议：dubbo, http, injvm, mock, redis, registry, rmi, thrift-->
+    <dubbo:protocol name="dubbo" port="20880"/>
+
+    <dubbo:protocol name="hessian" port="8090" server="jetty"/>
+
+    <!--bean的定义-->
+    <bean id="orderService" class="com.zhaodf.OrderServiceImpl"/>
+    <!--bean的定义-->
+    <bean id="orderService2" class="com.zhaodf.OrderServiceImpl2"/>
+    <!--bean的定义-->
+    <bean id="orderQueryService" class="com.zhaodf.OrderQueryServiceImpl"/>
+</beans>

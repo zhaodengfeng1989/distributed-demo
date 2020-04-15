@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress SpringFacetInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--当前项目在整个分布式架构里面的唯一名称，用来计算依赖关系的标签，owner表示当前这个应用是由谁维护的,这两一般都必须配置-->
+    <dubbo:application name="dubbo-user" owner="zhaodf"/>
+
+    <!--172.24.1.29 当前项目在整个分布式架构里面的唯一名称，用来计算依赖关系的标签，owner表示当前这个应用是由谁维护的,这两一般都必须配置-->
+    <dubbo:registry address="zookeeper://192.168.0.103:2181"/>
+
+    <!--远程服务调用代理：id-服务引用BeanId，interface-服务接口名-->
+    <dubbo:reference id="orderService" interface="com.zhaodf.IOrderService" protocol="hessian" version="2.0"/>
+
+    <!--远程服务调用代理：id-服务引用BeanId，interface-服务接口名-->
+    <dubbo:reference id="orderQueryService" interface="com.zhaodf.IOrderQueryService" protocol="http"/>
+
+</beans>
